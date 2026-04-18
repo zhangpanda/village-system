@@ -1,0 +1,32 @@
+<view class="page">
+  <view class="card">
+    <view class="form-item">
+      <text class="label">标题</text>
+      <input placeholder="简要描述问题" data-field="title" bindinput="onInput" />
+    </view>
+    <view class="form-item">
+      <text class="label">类型</text>
+      <picker range="{{catNames}}" value="{{catIndex}}" bindchange="onCatPick">
+        <view class="picker-text">{{catNames[catIndex]}} ▼</view>
+      </picker>
+    </view>
+    <view class="form-item">
+      <text class="label">优先级</text>
+      <picker range="{{priNames}}" value="{{priIndex}}" bindchange="onPriPick">
+        <view class="picker-text">{{priNames[priIndex]}} ▼</view>
+      </picker>
+    </view>
+    <view class="form-item">
+      <text class="label">详细描述</text>
+      <textarea placeholder="请详细描述问题" data-field="content" bindinput="onInput" style="width:100%;min-height:200rpx" />
+    </view>
+    <view class="form-item">
+      <text class="label">图片（可选，最多3张）</text>
+      <view class="img-list">
+        <image wx:for="{{images}}" wx:key="*this" src="{{item}}" mode="aspectFill" class="img-thumb" bindtap="removeImage" data-idx="{{index}}" />
+        <view wx:if="{{images.length < 3}}" class="img-add" bindtap="chooseImage">+</view>
+      </view>
+    </view>
+  </view>
+  <view class="btn-primary" style="margin:24rpx" bindtap="submit">提交工单</view>
+</view>

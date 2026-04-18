@@ -1,0 +1,39 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/notices/notices",
+    "pages/notice-detail/notice-detail",
+    "pages/finance/finance",
+    "pages/subsidy/subsidy",
+    "pages/subsidy-apply/subsidy-apply",
+    "pages/tickets/tickets",
+    "pages/ticket-detail/ticket-detail",
+    "pages/ticket-create/ticket-create",
+    "pages/me/me",
+    "pages/notifications/notifications",
+    "pages/subsidy-detail/subsidy-detail",
+    "pages/admin-dashboard/admin-dashboard",
+    "pages/admin-review/admin-review",
+    "pages/admin-users/admin-users",
+    "pages/admin-user-edit/admin-user-edit",
+    "pages/admin-households/admin-households",
+    "pages/admin-household-detail/admin-household-detail"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#07c160",
+    "navigationBarTitleText": "村务公开",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f5f5f5"
+  },
+  "tabBar": {
+    "color": "#999",
+    "selectedColor": "#07c160",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "首页", "iconPath": "icons/home.png", "selectedIconPath": "icons/home-active.png" },
+      { "pagePath": "pages/notices/notices", "text": "公告", "iconPath": "icons/notice.png", "selectedIconPath": "icons/notice-active.png" },
+      { "pagePath": "pages/me/me", "text": "我的", "iconPath": "icons/me.png", "selectedIconPath": "icons/me-active.png" }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

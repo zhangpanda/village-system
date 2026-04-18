@@ -1,0 +1,12 @@
+<view class="page">
+  <view wx:if="{{list.length > 0}}" style="text-align:right;padding:16rpx 24rpx">
+    <text style="font-size:24rpx;color:#07c160" bindtap="markAll">全部已读</text>
+  </view>
+  <view wx:if="{{loading}}" class="empty">加载中...</view>
+  <view wx:elif="{{list.length === 0}}" class="empty">暂无消息</view>
+  <view class="card" wx:for="{{list}}" wx:key="id" style="{{item.is_read ? 'opacity:0.6' : ''}}" bindtap="markOne" data-id="{{item.id}}">
+    <text style="font-weight:{{item.is_read ? 'normal' : 'bold'}};font-size:28rpx;display:block">{{item.title}}</text>
+    <text style="font-size:24rpx;color:#666;margin-top:8rpx;display:block">{{item.content}}</text>
+    <view class="meta">{{item.created_at}}</view>
+  </view>
+</view>

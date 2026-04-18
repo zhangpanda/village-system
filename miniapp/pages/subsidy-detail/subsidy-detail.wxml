@@ -1,0 +1,32 @@
+<wxs module="fmt">
+  module.exports.amount = function(v) { return (v / 100).toFixed(2) }
+  module.exports.state = function(s) {
+    var m = { submitted: "已提交", committee_review: "村委初审中", secretary_review: "支书终审中", approved: "已通过", rejected: "已驳回" }
+    return m[s] || s
+  }
+  module.exports.type = function(s) {
+    var m = { farming: "种植补贴", medical: "医疗补贴", education: "教育补贴", housing: "住房补贴", other: "其他" }
+    return m[s] || s
+  }
+</wxs>
+<view class="page" wx:if="{{detail}}">
+  <view class="card">
+    <view style="display:flex;justify-content:space-between;align-items:center">
+      <text style="font-size:34rpx;font-weight:bold;flex:1">{{detail.title}}</text>
+      <text class="tag tag-{{detail.workflow_state}}">{{fmt.state(detail.workflow_state)}}</text>
+    </view>
+    <view class="info-row"><text class="info-label">补贴类型</text><text>{{fmt.type(detail.type)}}</text></view>
+    <view class="info-row"><text class="info-label">申请金额</text><text style="color:#e33;font-weight:bold">¥{{fmt.amount(detail.amount)}}</text></view>
+    <view class="info-row"><text class="info-label">申请时间</text><text>{{detail.created_at}}</text></view>
+    <view class="info-row" wx:if="{{detail.reason}}"><text class="info-label">申请理由</text><text>{{detail.reason}}</text></view>
+    <view class="info-row" wx:if="{{detail.review_note}}"><text class="info-label">审核意见</text><text>{{detail.review_note}}</text></view>
+  </view>
+
+  <view wx:if="{{logs.length > 0}}" style="margin:24rpx;font-weight:bold;font-size:30rpx">审批记录</view>
+  <view class="card" wx:for="{{logs}}" wx:key="id">
+    <text style="font-weight:bold;font-size:26rpx">{{item.operator_name || '系统'}}</text>
+    <text style="font-size:24rpx;color:#666;margin-left:12rpx">{{fmt.state(item.to_state)}}</text>
+    <view wx:if="{{item.remark}}" style="margin-top:8rpx;font-size:26rpx;color:#666">{{item.remark}}</view>
+    <view class="meta">{{item.created_at}}</view>
+  </view>
+</view>

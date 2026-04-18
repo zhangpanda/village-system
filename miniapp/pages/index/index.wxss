@@ -1,0 +1,30 @@
+.banner {
+  background: linear-gradient(135deg, #07c160, #06ad56);
+  padding: 60rpx 40rpx 40rpx;
+  color: #fff;
+}
+.banner-title { font-size: 40rpx; font-weight: bold; display: block; }
+.banner-sub { font-size: 26rpx; opacity: 0.8; margin-top: 8rpx; display: block; }
+.grid {
+  display: flex;
+  background: #fff;
+  margin: 24rpx;
+  border-radius: 16rpx;
+  padding: 30rpx 0;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.05);
+}
+.grid-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 26rpx;
+  color: #333;
+}
+.grid-icon { font-size: 48rpx; margin-bottom: 12rpx; }
+.section { margin: 24rpx; }
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16rpx; }
+.section-title { font-size: 32rpx; font-weight: bold; }
+.section-more { font-size: 24rpx; color: #07c160; }
+.notice-row { display: flex; align-items: center; }
+.notice-title { font-size: 28rpx; flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }

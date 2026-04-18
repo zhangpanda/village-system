@@ -1,0 +1,54 @@
+<wxs module="s">
+module.exports.state = function(v) {
+  var m = { draft:'草稿',pending_review:'待审核',published:'已发布',submitted:'待初审',committee_review:'初审中',secretary_review:'待终审',approved:'已通过',rejected:'已驳回',open:'待处理',assigned:'已分配',processing:'处理中',resolved:'已解决',closed:'已关闭' }
+  return m[v] || v
+}
+</wxs>
+
+<view class="page">
+  <view wx:if="{{list.length === 0}}" class="empty">暂无待处理项</view>
+  <view class="item" wx:for="{{list}}" wx:key="id" bindtap="showDetail" data-item="{{item}}">
+    <view class="item-top">
+      <text class="item-title">{{item.title}}</text>
+      <text class="tag">{{s.state(item.state)}}</text>
+    </view>
+    <text class="item-sub">{{item.sub}}</text>
+  </view>
+</view>
+
+<!-- 详情弹窗 -->
+<view class="mask" wx:if="{{detail}}" bindtap="closeDetail">
+  <view class="popup" catchtap="">
+    <view class="popup-title">{{detail.title}}</view>
+    <view class="popup-tag">{{s.state(detail.state)}}</view>
+    <view class="popup-sub">{{detail.sub}}</view>
+
+    <!-- 审核类：公告/补贴/财务 -->
+    <block wx:if="{{type !== 'ticket'}}">
+      <view class="form-group">
+        <text class="form-label">审批意见</text>
+        <textarea class="form-textarea" placeholder="填写意见（可选）" value="{{note}}" bindinput="onNoteInput" />
+      </view>
+      <view class="btn-row">
+        <view class="btn btn-green" bindtap="approve">通过</view>
+        <view class="btn btn-red" bindtap="reject">驳回</view>
+      </view>
+    </block>
+
+    <!-- 工单类 -->
+    <block wx:if="{{type === 'ticket'}}">
+      <view class="btn-row" wx:if="{{detail.state === 'open'}}">
+        <view class="btn btn-green" bindtap="assignTicket">认领工单</view>
+      </view>
+      <view class="btn-row" wx:if="{{detail.state === 'assigned' || detail.state === 'processing'}}">
+        <view class="btn btn-green" bindtap="resolveTicket">标记已解决</view>
+      </view>
+      <view class="comment-bar" wx:if="{{detail.state !== 'resolved' && detail.state !== 'closed'}}">
+        <input class="comment-input" placeholder="回复..." value="{{commentText}}" bindinput="onCommentInput" />
+        <view class="comment-send" bindtap="sendComment">发送</view>
+      </view>
+    </block>
+
+    <view class="btn-close" bindtap="closeDetail">关闭</view>
+  </view>
+</view>

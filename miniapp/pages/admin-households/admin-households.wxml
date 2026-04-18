@@ -1,0 +1,11 @@
+<view class="page">
+  <view wx:if="{{list.length === 0}}" class="empty">暂无户籍</view>
+  <view class="item" wx:for="{{list}}" wx:key="id" bindtap="viewDetail" data-id="{{item.id}}">
+    <view class="item-top">
+      <text class="title">户号: {{item.household_no}}</text>
+      <text class="count">{{item.member_count || 0}}人</text>
+    </view>
+    <view class="item-sub">户主: {{item.head_name || '未设置'}} · {{item.address || ''}}</view>
+    <view class="item-sub" wx:if="{{item.farmland_area}}">耕地 {{item.farmland_area}}亩 · 林地 {{item.forest_area}}亩 · 宅基地 {{item.homesite_area}}㎡</view>
+  </view>
+</view>

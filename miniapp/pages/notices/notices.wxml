@@ -1,0 +1,22 @@
+<view class="page">
+  <view class="search-bar">
+    <input placeholder="搜索公告..." value="{{keyword}}" bindinput="onSearch" bindconfirm="doSearch" />
+    <view class="search-btn" bindtap="doSearch">搜索</view>
+  </view>
+  <view class="tabs">
+    <text class="tab {{category === '' ? 'active' : ''}}" bindtap="filterCat" data-cat="">全部</text>
+    <text class="tab {{category === 'policy' ? 'active' : ''}}" bindtap="filterCat" data-cat="policy">政策</text>
+    <text class="tab {{category === 'urgent' ? 'active' : ''}}" bindtap="filterCat" data-cat="urgent">紧急</text>
+    <text class="tab {{category === 'activity' ? 'active' : ''}}" bindtap="filterCat" data-cat="activity">活动</text>
+  </view>
+  <view wx:if="{{list.length === 0 && !loading}}" class="empty">暂无公告</view>
+  <view class="card" wx:for="{{list}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+    <view class="notice-row">
+      <text wx:if="{{item.pinned}}" class="tag" style="background:#fff0f0;color:#e33;">置顶</text>
+      <text class="tag tag-{{item.category}}">{{item.category === 'urgent' ? '紧急' : item.category === 'policy' ? '政策' : '活动'}}</text>
+      <text class="notice-title">{{item.title}}</text>
+    </view>
+    <view class="meta">{{item.author}} · {{item.created_at}} · 👁 {{item.views}}</view>
+  </view>
+  <view wx:if="{{loading}}" class="empty">加载中...</view>
+</view>

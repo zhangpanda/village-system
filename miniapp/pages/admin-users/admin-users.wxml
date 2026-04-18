@@ -1,0 +1,15 @@
+<view class="page">
+  <input class="search" placeholder="搜索姓名或手机号" value="{{q}}" bindinput="onSearch" />
+  <view wx:if="{{list.length === 0}}" class="empty">暂无用户</view>
+  <view class="item" wx:for="{{list}}" wx:key="id">
+    <view class="item-top" bindtap="editUser" data-id="{{item.id}}">
+      <text class="name">{{item.name}}</text>
+      <text class="role">{{item.roleLabel}}</text>
+    </view>
+    <view class="item-sub">{{item.phone}} · {{item.address || '未填写地址'}}</view>
+    <view class="item-actions">
+      <text class="link" bindtap="editUser" data-id="{{item.id}}">编辑</text>
+      <text class="link red" bindtap="resetPwd" data-id="{{item.id}}" data-name="{{item.name}}">重置密码</text>
+    </view>
+  </view>
+</view>

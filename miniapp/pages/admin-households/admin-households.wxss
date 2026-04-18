@@ -1,0 +1,7 @@
+.page { padding: 24rpx; }
+.empty { text-align: center; color: #999; padding: 60rpx; }
+.item { background: #fff; border-radius: 12rpx; padding: 24rpx; margin-bottom: 16rpx; }
+.item-top { display: flex; justify-content: space-between; align-items: center; }
+.title { font-size: 30rpx; font-weight: 600; }
+.count { font-size: 24rpx; color: #07c160; background: #e8f5e9; padding: 4rpx 12rpx; border-radius: 8rpx; }
+.item-sub { font-size: 24rpx; color: #999; margin-top: 8rpx; }

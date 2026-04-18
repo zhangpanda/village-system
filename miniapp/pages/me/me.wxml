@@ -1,0 +1,133 @@
+<wxs module="util">
+  module.exports.firstChar = function(s) {
+    return s ? s.substring(0, 1) : '?'
+  }
+  module.exports.isWxPhone = function(s) {
+    return !s || s.substring(0, 3) === 'wx_'
+  }
+</wxs>
+<view class="page">
+  <!-- 未登录 -->
+  <view wx:if="{{!logged}}" class="login-box">
+    <text style="font-size:36rpx;margin-bottom:20rpx;display:block">👤 请先登录</text>
+    <text style="font-size:26rpx;color:#999;margin-bottom:40rpx;display:block">登录后可申请补贴、提交工单</text>
+    <view class="btn-primary" bindtap="wxLogin">微信一键登录</view>
+  </view>
+
+  <!-- 已登录 -->
+  <view wx:else>
+    <!-- 个人信息卡片 -->
+    <view class="card">
+      <view wx:if="{{!editMode}}" class="profile">
+        <view class="avatar">{{util.firstChar(userInfo.name)}}</view>
+        <view class="info">
+          <text class="name">{{userInfo.name}}</text>
+          <text class="phone" wx:if="{{userInfo.gender}}">{{userInfo.gender=='male'?'♂ 男':'♀ 女'}}</text>
+          <text class="phone" wx:if="{{!util.isWxPhone(userInfo.phone)}}">📱 {{userInfo.phone}}</text>
+          <text class="detail" wx:if="{{userInfo.address}}">📍 {{userInfo.address}}</text>
+          <text class="role">{{userInfo.role_label || '村民'}}</text>
+        </view>
+        <text class="edit-link" bindtap="startEdit">编辑</text>
+      </view>
+      <view wx:else>
+        <view class="form-item">
+          <text class="label">姓名</text>
+          <input value="{{editName}}" bindinput="onEditName" placeholder="输入真实姓名" />
+        </view>
+        <view class="form-item">
+          <text class="label">性别</text>
+          <picker mode="selector" range="{{['男','女']}}" value="{{editGenderIdx}}" bindchange="onEditGender">
+            <text style="color:{{editGender?'#333':'#999'}}">{{editGender=='male'?'男':editGender=='female'?'女':'请选择'}}</text>
+          </picker>
+        </view>
+        <view class="form-item">
+          <text class="label">手机号</text>
+          <input type="number" maxlength="11" value="{{editPhone}}" bindinput="onEditPhone" placeholder="输入11位手机号" />
+          <button wx:if="{{wxPhoneEnabled}}" class="wx-phone-btn" open-type="getPhoneNumber" bindgetphonenumber="onGetPhoneNumber">微信获取</button>
+        </view>
+        <view class="form-item">
+          <text class="label">地址</text>
+          <input value="{{editAddress}}" bindinput="onEditAddress" placeholder="如：XX村1组" />
+        </view>
+        <view style="display:flex;margin-top:20rpx">
+          <view class="btn-primary" style="flex:1" bindtap="saveProfile">保存</view>
+          <view class="btn-cancel" bindtap="cancelEdit">取消</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 详细信息 -->
+    <view class="card" wx:if="{{!editMode}}" style="margin-top:16rpx">
+      <view class="detail-row" wx:if="{{userInfo.birth_date}}"><text class="detail-label">🎂 出生日期</text><text>{{userInfo.birth_date}}</text></view>
+      <view class="detail-row" wx:if="{{userInfo.ethnicity}}"><text class="detail-label">🏷️ 民族</text><text>{{userInfo.ethnicity}}</text></view>
+      <view class="detail-row" wx:if="{{userInfo.education}}"><text class="detail-label">📖 文化程度</text><text>{{userInfo.education}}</text></view>
+      <view class="detail-row" wx:if="{{userInfo.id_card}}"><text class="detail-label">🪪 身份证</text><text>{{userInfo.id_card}}</text></view>
+      <view class="detail-row" wx:if="{{userInfo.group_name}}"><text class="detail-label">🏘️ 所属小组</text><text>{{userInfo.group_name}}</text></view>
+      <view class="detail-row" wx:if="{{userInfo.emergency_contact}}"><text class="detail-label">📞 紧急联系人</text><text>{{userInfo.emergency_contact}} {{userInfo.emergency_phone}}</text></view>
+      <view style="display:flex;flex-wrap:wrap;gap:8rpx;margin-top:12rpx" wx:if="{{userInfo.is_party_member || userInfo.is_low_income || userInfo.is_five_guarantee || userInfo.is_disabled || userInfo.is_military}}">
+        <text wx:if="{{userInfo.is_party_member}}" class="info-tag">🎖️ 党员</text>
+        <text wx:if="{{userInfo.is_low_income}}" class="info-tag">🏠 低保户</text>
+        <text wx:if="{{userInfo.is_five_guarantee}}" class="info-tag">🏠 五保户</text>
+        <text wx:if="{{userInfo.is_disabled}}" class="info-tag">♿ 残疾人</text>
+        <text wx:if="{{userInfo.is_military}}" class="info-tag">🎗️ 军属</text>
+      </view>
+    </view>
+
+    <view class="menu">
+      <view class="menu-item" bindtap="goNotifications">
+        <text>🔔 消息通知</text>
+        <text class="arrow" wx:if="{{unreadCount > 0}}" style="color:#e33">{{unreadCount}}条未读 ></text>
+        <text class="arrow" wx:else>></text>
+      </view>
+      <view class="menu-item" bindtap="goSubsidy">
+        <text>📋 我的补贴</text>
+        <text class="arrow">></text>
+      </view>
+      <view class="menu-item" bindtap="goTickets">
+        <text>🔧 我的工单</text>
+        <text class="arrow">></text>
+      </view>
+      <view class="menu-item" bindtap="showPasswordEdit">
+        <text>🔑 {{userInfo.password_set ? '修改密码' : '设置密码'}}</text>
+        <text class="arrow">></text>
+      </view>
+      <view class="menu-item" wx:if="{{isAdmin}}" bindtap="goAdmin">
+        <text>⚙️ 管理后台</text>
+        <text class="arrow">></text>
+      </view>
+    </view>
+
+    <!-- 修改密码 -->
+    <view wx:if="{{showPwdEdit}}" class="card">
+      <text style="font-size:28rpx;font-weight:bold;display:block;margin-bottom:16rpx">🔑 修改密码</text>
+      <view class="form-item" wx:if="{{userInfo.password_set}}">
+        <text class="label">旧密码</text>
+        <input type="password" placeholder="输入旧密码" value="{{oldPwd}}" bindinput="onOldPwd" />
+      </view>
+      <view class="form-item">
+        <text class="label">新密码</text>
+        <input type="password" placeholder="至少6位" value="{{newPwd}}" bindinput="onNewPwd" />
+      </view>
+      <view class="form-item">
+        <text class="label">确认密码</text>
+        <input type="password" placeholder="再次输入" value="{{newPwd2}}" bindinput="onNewPwd2" />
+      </view>
+      <view style="display:flex;margin-top:16rpx">
+        <view class="btn-primary" style="flex:1" bindtap="doChangePwd">确认</view>
+        <view class="btn-cancel" bindtap="hidePwdEdit">取消</view>
+      </view>
+    </view>
+
+    <view class="btn-logout" bindtap="logout">退出登录</view>
+
+    <!-- 昵称设置弹窗 -->
+    <view wx:if="{{showNicknameInput}}" class="nickname-mask">
+      <view class="nickname-box">
+        <text style="font-size:32rpx;font-weight:bold;display:block;margin-bottom:16rpx">👋 欢迎！请输入你的姓名</text>
+        <text style="font-size:24rpx;color:#999;display:block;margin-bottom:24rpx">方便村委和其他村民认识你</text>
+        <input class="nickname-input" placeholder="输入真实姓名" value="{{nicknameValue}}" bindinput="onNicknameInput" focus="{{showNicknameInput}}" />
+        <view class="btn-primary" style="margin-top:20rpx" bindtap="saveNickname">确认</view>
+      </view>
+    </view>
+  </view>
+</view>

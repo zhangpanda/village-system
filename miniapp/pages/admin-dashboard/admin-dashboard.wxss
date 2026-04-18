@@ -1,0 +1,12 @@
+.page { padding: 24rpx; }
+.title { font-size: 36rpx; font-weight: bold; margin-bottom: 24rpx; }
+.cards { display: flex; flex-wrap: wrap; gap: 16rpx; margin-bottom: 32rpx; }
+.card { flex: 1; min-width: 40%; background: #fff; border-radius: 16rpx; padding: 24rpx; text-align: center; box-shadow: 0 2rpx 8rpx rgba(0,0,0,.06); }
+.card .num { display: block; font-size: 48rpx; font-weight: bold; color: #07c160; }
+.card .num.orange { color: #ff9800; }
+.card .num.red { color: #e33; }
+.card .label { font-size: 24rpx; color: #999; margin-top: 8rpx; }
+.menu { background: #fff; border-radius: 16rpx; overflow: hidden; }
+.menu-item { display: flex; justify-content: space-between; align-items: center; padding: 28rpx 24rpx; border-bottom: 1rpx solid #f0f0f0; font-size: 30rpx; }
+.menu-item:last-child { border-bottom: none; }
+.arrow { color: #ccc; font-size: 32rpx; }

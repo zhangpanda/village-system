@@ -1,0 +1,4 @@
+.form-item { padding: 20rpx 0; border-bottom: 1rpx solid #f0f0f0; }
+.form-item:last-child { border-bottom: none; }
+.label { font-size: 28rpx; color: #666; display: block; margin-bottom: 12rpx; }
+input, picker { font-size: 30rpx; }

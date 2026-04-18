@@ -1,0 +1,31 @@
+<wxs module="fmt">
+  module.exports.amount = function(v) { return (v / 100).toFixed(2) }
+</wxs>
+<view class="page">
+  <view class="year-bar">
+    <picker range="{{years}}" bindchange="onYearPick"><text class="year-pick">📅 {{year}}年 ▼</text></picker>
+  </view>
+  <view class="summary card" wx:if="{{summary}}">
+    <view class="sum-row">
+      <view class="sum-item"><text class="sum-label">收入</text><text class="sum-val income">¥{{fmt.amount(summary.total_income)}}</text></view>
+      <view class="sum-item"><text class="sum-label">支出</text><text class="sum-val expense">¥{{fmt.amount(summary.total_expense)}}</text></view>
+      <view class="sum-item"><text class="sum-label">结余</text><text class="sum-val">¥{{fmt.amount(summary.balance)}}</text></view>
+    </view>
+  </view>
+  <view class="tabs">
+    <text class="tab {{type === '' ? 'active' : ''}}" bindtap="filterType" data-type="">全部</text>
+    <text class="tab {{type === 'income' ? 'active' : ''}}" bindtap="filterType" data-type="income">收入</text>
+    <text class="tab {{type === 'expense' ? 'active' : ''}}" bindtap="filterType" data-type="expense">支出</text>
+  </view>
+  <view wx:if="{{list.length === 0}}" class="empty">暂无记录</view>
+  <view class="card" wx:for="{{list}}" wx:key="id">
+    <view class="fin-row">
+      <view>
+        <text class="fin-cat">{{item.category || '其他'}}</text>
+        <text class="fin-remark">{{item.remark}}</text>
+      </view>
+      <text class="fin-amount {{item.type}}">{{item.type === 'income' ? '+' : '-'}}¥{{fmt.amount(item.amount)}}</text>
+    </view>
+    <view class="meta">{{item.date}} · {{item.author}}</view>
+  </view>
+</view>

@@ -1,0 +1,18 @@
+.summary { text-align: center; }
+.sum-row { display: flex; }
+.sum-item { flex: 1; }
+.sum-label { font-size: 24rpx; color: #999; display: block; }
+.sum-val { font-size: 34rpx; font-weight: bold; display: block; margin-top: 8rpx; }
+.sum-val.income { color: #07c160; }
+.sum-val.expense { color: #e33; }
+.tabs { display: flex; background: #fff; padding: 16rpx 24rpx; }
+.tab { flex: 1; text-align: center; padding: 12rpx 0; font-size: 28rpx; color: #666; border-radius: 8rpx; }
+.tab.active { color: #07c160; font-weight: bold; background: #e6f7ee; }
+.fin-row { display: flex; justify-content: space-between; align-items: center; }
+.fin-cat { font-weight: bold; font-size: 28rpx; }
+.fin-remark { font-size: 24rpx; color: #666; margin-left: 12rpx; }
+.fin-amount { font-size: 32rpx; font-weight: bold; }
+.fin-amount.income { color: #07c160; }
+.fin-amount.expense { color: #e33; }
+.year-bar { background:#fff; padding:16rpx 24rpx; }
+.year-pick { font-size:28rpx; color:#07c160; font-weight:bold; }

@@ -1,0 +1,3 @@
+.title { font-size: 36rpx; font-weight: bold; display: block; margin-bottom: 16rpx; }
+.content { font-size: 30rpx; line-height: 1.8; margin-top: 24rpx; white-space: pre-wrap; }
+.share-btn { margin: 24rpx; background: #07c160; color: #fff; border-radius: 12rpx; font-size: 30rpx; }

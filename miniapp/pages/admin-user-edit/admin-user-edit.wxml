@@ -1,0 +1,47 @@
+<view class="page">
+  <view class="section">基本信息</view>
+  <view class="field"><text class="label">姓名</text><input value="{{form.name}}" data-key="name" bindinput="onInput" /></view>
+  <view class="field"><text class="label">手机号</text><input value="{{form.phone}}" data-key="phone" bindinput="onInput" /></view>
+  <view class="field">
+    <text class="label">性别</text>
+    <picker range="{{genderLabels}}" value="{{genderIdx}}" bindchange="onGenderPick"><text class="picker-val">{{genderIdx >= 0 ? genderLabels[genderIdx] : '请选择'}}</text></picker>
+  </view>
+  <view class="field"><text class="label">出生日期</text><input value="{{form.birth_date}}" data-key="birth_date" bindinput="onInput" placeholder="YYYY-MM-DD" /></view>
+  <view class="field"><text class="label">民族</text><input value="{{form.ethnicity}}" data-key="ethnicity" bindinput="onInput" /></view>
+  <view class="field"><text class="label">身份证号</text><input value="{{form.id_card}}" data-key="id_card" bindinput="onInput" /></view>
+  <view class="field"><text class="label">地址</text><input value="{{form.address}}" data-key="address" bindinput="onInput" /></view>
+
+  <view class="section">组织信息</view>
+  <view class="field">
+    <text class="label">角色</text>
+    <picker range="{{roleLabels}}" value="{{roleIdx}}" bindchange="onRolePick"><text class="picker-val">{{roleLabels[roleIdx]}}</text></picker>
+  </view>
+  <view class="field">
+    <text class="label">所属小组</text>
+    <picker range="{{groupNames}}" value="{{groupIdx}}" bindchange="onGroupPick"><text class="picker-val">{{groupIdx >= 0 ? groupNames[groupIdx] : '请选择'}}</text></picker>
+  </view>
+  <view class="field">
+    <text class="label">文化程度</text>
+    <picker range="{{eduList}}" value="{{eduIdx}}" bindchange="onEduPick"><text class="picker-val">{{eduIdx >= 0 ? eduList[eduIdx] : '请选择'}}</text></picker>
+  </view>
+  <view class="field">
+    <text class="label">婚姻状况</text>
+    <picker range="{{maritalLabels}}" value="{{maritalIdx}}" bindchange="onMaritalPick"><text class="picker-val">{{maritalIdx >= 0 ? maritalLabels[maritalIdx] : '请选择'}}</text></picker>
+  </view>
+
+  <view class="section">特殊身份</view>
+  <view class="flags">
+    <view class="flag {{form.is_party_member ? 'active' : ''}}" bindtap="toggleFlag" data-key="is_party_member">党员</view>
+    <view class="flag {{form.is_low_income ? 'active' : ''}}" bindtap="toggleFlag" data-key="is_low_income">低保户</view>
+    <view class="flag {{form.is_five_guarantee ? 'active' : ''}}" bindtap="toggleFlag" data-key="is_five_guarantee">五保户</view>
+    <view class="flag {{form.is_disabled ? 'active' : ''}}" bindtap="toggleFlag" data-key="is_disabled">残疾人</view>
+    <view class="flag {{form.is_military ? 'active' : ''}}" bindtap="toggleFlag" data-key="is_military">军属</view>
+  </view>
+
+  <view class="section">联系信息</view>
+  <view class="field"><text class="label">紧急联系人</text><input value="{{form.emergency_contact}}" data-key="emergency_contact" bindinput="onInput" /></view>
+  <view class="field"><text class="label">紧急电话</text><input value="{{form.emergency_phone}}" data-key="emergency_phone" bindinput="onInput" /></view>
+  <view class="field"><text class="label">备注</text><input value="{{form.remark}}" data-key="remark" bindinput="onInput" /></view>
+
+  <button class="save-btn" bindtap="save">保存</button>
+</view>

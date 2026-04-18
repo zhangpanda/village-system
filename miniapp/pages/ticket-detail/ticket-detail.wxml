@@ -1,0 +1,36 @@
+<wxs module="fmt">
+  module.exports.statusText = function(s) {
+    var m = { open: "待处理", assigned: "已分配", processing: "处理中", resolved: "已解决", closed: "已关闭" }
+    return m[s] || s
+  }
+  module.exports.parseImages = function(s) {
+    try { return JSON.parse(s) } catch(e) { return [] }
+  }
+</wxs>
+<view class="page" wx:if="{{ticket}}">
+  <view class="card">
+    <view style="display:flex;justify-content:space-between;align-items:center">
+      <text style="font-size:34rpx;font-weight:bold;flex:1">{{ticket.title}}</text>
+      <text class="tag tag-{{ticket.workflow_state === 'open' ? 'pending' : 'approved'}}">{{fmt.statusText(ticket.workflow_state)}}</text>
+    </view>
+    <view class="meta">{{ticket.submitter}} · {{ticket.category}} · {{ticket.created_at}}</view>
+    <view style="margin-top:20rpx;line-height:1.8;white-space:pre-wrap">{{ticket.content}}</view>
+    <view wx:if="{{fmt.parseImages(ticket.images).length > 0}}" class="img-list">
+      <image wx:for="{{fmt.parseImages(ticket.images)}}" wx:key="*this" src="{{item}}" mode="aspectFill" class="img-thumb" bindtap="previewImage" data-url="{{item}}" />
+    </view>
+    <view wx:if="{{ticket.workflow_state !== 'closed' && ticket.workflow_state !== 'resolved'}}" class="btn-close" bindtap="closeTicket">关闭工单</view>
+  </view>
+
+  <view style="margin:24rpx;font-weight:bold;font-size:30rpx">回复 ({{comments.length}})</view>
+  <view wx:if="{{comments.length === 0}}" class="empty">暂无回复</view>
+  <view class="card" wx:for="{{comments}}" wx:key="id">
+    <view style="font-weight:bold;font-size:26rpx">{{item.user_name}}</view>
+    <view style="margin-top:8rpx">{{item.content}}</view>
+    <view class="meta">{{item.created_at}}</view>
+  </view>
+
+  <view class="comment-bar" wx:if="{{ticket.workflow_state !== 'closed' && ticket.workflow_state !== 'resolved'}}">
+    <input class="comment-input" placeholder="输入回复..." value="{{commentText}}" bindinput="onInput" confirm-type="send" bindconfirm="sendComment" />
+    <view class="comment-send" bindtap="sendComment">发送</view>
+  </view>
+</view>

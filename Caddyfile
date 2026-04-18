@@ -1,0 +1,11 @@
+your-domain.com {
+	encode gzip
+
+	handle /webhook {
+		reverse_proxy localhost:9000
+	}
+
+	handle {
+		reverse_proxy localhost:8080
+	}
+}

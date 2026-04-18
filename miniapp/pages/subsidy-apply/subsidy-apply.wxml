@@ -1,0 +1,23 @@
+<view class="page">
+  <view class="card">
+    <view class="form-item">
+      <text class="label">补贴名称</text>
+      <input placeholder="如：春耕补贴" data-field="title" bindinput="onInput" />
+    </view>
+    <view class="form-item">
+      <text class="label">补贴类型</text>
+      <picker range="{{typeNames}}" value="{{typeIndex}}" bindchange="onTypePick">
+        <view class="picker-text">{{typeNames[typeIndex]}} ▼</view>
+      </picker>
+    </view>
+    <view class="form-item">
+      <text class="label">申请金额（元）</text>
+      <input type="digit" placeholder="0.00" data-field="amount" bindinput="onInput" />
+    </view>
+    <view class="form-item">
+      <text class="label">申请理由</text>
+      <textarea placeholder="请说明申请理由" data-field="reason" bindinput="onInput" style="width:100%;min-height:120rpx" />
+    </view>
+  </view>
+  <view class="btn-primary" style="margin:24rpx" bindtap="submit">提交申请</view>
+</view>

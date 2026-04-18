@@ -1,0 +1,46 @@
+<view class="page">
+  <!-- 顶部 Banner -->
+  <view class="banner">
+    <text class="banner-title">🏘️ {{villageName || '村务'}}·村务公开</text>
+    <text class="banner-sub">阳光村务 · 透明治理</text>
+  </view>
+
+  <!-- 功能入口 -->
+  <view class="grid">
+    <view class="grid-item" bindtap="goNotices">
+      <text class="grid-icon">📢</text>
+      <text>村务公告</text>
+    </view>
+    <view class="grid-item" bindtap="goFinance">
+      <text class="grid-icon">💰</text>
+      <text>财务公示</text>
+    </view>
+    <view class="grid-item" bindtap="goSubsidy">
+      <text class="grid-icon">📋</text>
+      <text>补贴申请</text>
+    </view>
+    <view class="grid-item" bindtap="goTickets">
+      <text class="grid-icon">🔧</text>
+      <text>便民服务</text>
+    </view>
+  </view>
+
+  <!-- 最新公告 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">最新公告</text>
+      <text class="section-more" bindtap="goNotices">更多 ></text>
+    </view>
+    <view wx:if="{{loading}}" class="empty">加载中...</view>
+    <view wx:elif="{{notices.length === 0}}" class="empty">暂无公告</view>
+    <block wx:else>
+      <view class="card" wx:for="{{notices}}" wx:key="id" bindtap="goNotice" data-id="{{item.id}}">
+        <view class="notice-row">
+          <text class="tag tag-{{item.category}}">{{item.category === 'urgent' ? '紧急' : item.category === 'policy' ? '政策' : '活动'}}</text>
+          <text class="notice-title">{{item.title}}</text>
+        </view>
+        <view class="meta">{{item.author}} · {{item.created_at}} · 👁 {{item.views}}</view>
+      </view>
+    </block>
+  </view>
+</view>

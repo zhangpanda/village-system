@@ -1,0 +1,21 @@
+<view class="page" wx:if="{{household}}">
+  <view class="card">
+    <view class="title">户号: {{household.household_no}}</view>
+    <view class="info">户主: {{household.head_name || '未设置'}}</view>
+    <view class="info">地址: {{household.address || '未填写'}}</view>
+    <view class="info" wx:if="{{household.farmland_area}}">耕地 {{household.farmland_area}}亩 · 林地 {{household.forest_area}}亩 · 宅基地 {{household.homesite_area}}㎡</view>
+  </view>
+
+  <view class="section">家庭成员 ({{members.length}}人)</view>
+  <view wx:if="{{members.length === 0}}" class="empty">暂无成员</view>
+  <view class="member" wx:for="{{members}}" wx:key="user_id">
+    <view class="member-top">
+      <text class="member-name" bindtap="editUser" data-uid="{{item.user_id}}">{{item.user_name}}</text>
+      <text class="member-rel">{{item.relation}}</text>
+    </view>
+    <view class="member-actions">
+      <text class="link" bindtap="editUser" data-uid="{{item.user_id}}">编辑信息</text>
+      <text class="link red" bindtap="removeMember" data-mid="{{item.user_id}}" data-name="{{item.user_name}}">移除</text>
+    </view>
+  </view>
+</view>

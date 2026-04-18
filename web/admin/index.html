@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>村务管理后台</title>
+<link rel="stylesheet" href="quill.snow.css">
+<style>
+:root { --green:#2e7d32; --red:#d32f2f; --blue:#1565c0; --orange:#e65100; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,"PingFang SC",sans-serif; background:#f0f2f5; max-width:640px; margin:0 auto; min-height:100vh; }
+.login-page { display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:100vh; padding:20px; }
+.login-box { background:#fff; border-radius:12px; padding:30px; width:100%; max-width:360px; box-shadow:0 2px 12px rgba(0,0,0,.1); }
+.login-box h2 { text-align:center; margin-bottom:24px; color:var(--green); }
+.form-group { margin-bottom:16px; }
+.form-group label { display:block; font-size:13px; color:#666; margin-bottom:6px; }
+.form-group input, .form-group select, .form-group textarea { width:100%; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px; outline:none; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:var(--green); }
+.form-group textarea { min-height:100px; resize:vertical; }
+.btn { display:inline-block; padding:10px 20px; border:none; border-radius:8px; font-size:14px; cursor:pointer; }
+.btn-green { background:var(--green); color:#fff; }
+.btn-red { background:var(--red); color:#fff; }
+.btn-blue { background:var(--blue); color:#fff; }
+.btn-block { width:100%; }
+.btn-outline { background:#fff; color:#333; border:1px solid #ddd; }
+.btn:disabled { opacity:.5; }
+.admin-page { display:none; }
+.top-bar { background:var(--green); color:#fff; padding:14px 16px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:10; }
+.top-bar h1 { font-size:16px; }
+.top-bar .logout { font-size:13px; cursor:pointer; opacity:.8; }
+.top-bar .admin-profile { font-size:13px; cursor:pointer; opacity:.8; margin-right:16px; }
+.dash-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:12px; }
+.dash-card { background:#fff; border-radius:10px; padding:16px; text-align:center; }
+.dash-card .num { font-size:24px; font-weight:700; }
+.dash-card .label { font-size:12px; color:#999; margin-top:4px; }
+.nav-tabs { display:flex; background:#fff; border-bottom:1px solid #eee; overflow-x:auto; position:sticky; top:48px; z-index:9; }
+.nav-tab { padding:12px 14px; font-size:13px; cursor:pointer; white-space:nowrap; border-bottom:2px solid transparent; }
+.nav-tab.active { color:var(--green); border-bottom-color:var(--green); font-weight:600; }
+.section { padding:12px; }
+.list-item { background:#fff; border-radius:8px; padding:12px; margin-bottom:8px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+.list-item .title { font-size:14px; font-weight:600; }
+.list-item .meta { font-size:11px; color:#999; margin-top:6px; display:flex; justify-content:space-between; }
+.fab { position:fixed; bottom:20px; right:20px; width:50px; height:50px; border-radius:50%; background:var(--green); color:#fff; font-size:24px; border:none; box-shadow:0 2px 8px rgba(0,0,0,.3); cursor:pointer; z-index:5; }
+.modal { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.5); z-index:100; display:none; justify-content:center; align-items:center; }
+.modal.show { display:flex; }
+.modal-body { background:#fff; width:100%; max-width:640px; max-height:85vh; border-radius:12px; padding:20px; overflow-y:auto; }
+.modal-body h3 { margin-bottom:16px; }
+.modal-body .close { float:right; font-size:20px; cursor:pointer; color:#999; }
+.status-tag { display:inline-block; font-size:10px; padding:2px 8px; border-radius:10px; }
+.status-tag.pending, .status-tag.submitted, .status-tag.pending_review { background:#fff3e0; color:var(--orange); }
+.status-tag.approved, .status-tag.published { background:#e8f5e9; color:var(--green); }
+.status-tag.rejected { background:#fbe9e7; color:var(--red); }
+.status-tag.open { background:#fff3e0; color:var(--orange); }
+.status-tag.assigned { background:#e3f2fd; color:var(--blue); }
+.status-tag.processing, .status-tag.secretary_review, .status-tag.committee_review { background:#e3f2fd; color:var(--blue); }
+.status-tag.resolved, .status-tag.closed { background:#e8f5e9; color:var(--green); }
+.status-tag.draft { background:#f5f5f5; color:#999; }
+.action-btns { display:flex; gap:8px; margin-top:8px; }
+.action-btns .btn { padding:6px 12px; font-size:12px; }
+.toast { position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#333; color:#fff; padding:10px 20px; border-radius:8px; font-size:14px; z-index:200; display:none; }
+#editor-container { height:200px; margin-bottom:12px; }
+.ql-toolbar { border-radius:8px 8px 0 0; }
+.ql-container { border-radius:0 0 8px 8px; }
+</style>
+</head>
+<body>
+
+<div id="loginPage" class="login-page">
+  <div class="login-box">
+    <h2 id="loginTitle">🏘️ 村务管理后台</h2>
+    <div class="form-group"><label>账号</label><input id="loginPhone" placeholder="手机号或admin"></div>
+    <div class="form-group"><label>密码</label><input id="loginPwd" type="password" placeholder="密码"></div>
+    <button class="btn btn-green btn-block" onclick="doLogin()">登 录</button>
+    <p id="loginErr" style="color:var(--red);font-size:12px;margin-top:8px;text-align:center"></p>
+  </div>
+</div>
+
+<div id="adminPage" class="admin-page">
+  <div class="top-bar">
+    <h1 id="adminTitle">🏘️ 村务管理</h1>
+    <span class="admin-profile" onclick="showAdminProfile()">👤 设置</span>
+    <span class="admin-profile" onclick="showNotifications()">🔔 <span id="notifyBadge"></span></span>
+    <span class="logout" onclick="logout()">退出</span>
+  </div>
+  <div id="dashboard" class="dash-grid"></div>
+  <div class="nav-tabs">
+    <div class="nav-tab active" data-sec="notices">公告管理</div>
+    <div class="nav-tab" data-sec="finance">财务管理</div>
+    <div class="nav-tab" data-sec="subsidies">补贴审批</div>
+    <div class="nav-tab" data-sec="tickets">工单处理</div>
+    <div class="nav-tab" data-sec="users">用户管理</div>
+    <div class="nav-tab" data-sec="households">户籍管理</div>
+    <div class="nav-tab" data-sec="groups">小组管理</div>
+    <div class="nav-tab" data-sec="reports">报表中心</div>
+    <div class="nav-tab" data-sec="workflows">审批流程</div>
+    <div class="nav-tab" data-sec="logs">操作日志</div>
+  </div>
+  <div id="section" class="section"></div>
+  <button class="fab" id="fabBtn" onclick="showCreateForm()">+</button>
+</div>
+
+<div id="modal" class="modal">
+  <div class="modal-body" id="modalBody"></div>
+</div>
+<div id="toast" class="toast"></div>
+
+<script src="quill.js"></script>
+<script src="admin.js?v=32"></script>
+</body>
+</html>

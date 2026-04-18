@@ -1,0 +1,11 @@
+.page { padding: 24rpx; }
+.search { background: #fff; border-radius: 12rpx; padding: 16rpx 24rpx; font-size: 28rpx; margin-bottom: 20rpx; }
+.empty { text-align: center; color: #999; padding: 60rpx; }
+.item { background: #fff; border-radius: 12rpx; padding: 24rpx; margin-bottom: 16rpx; }
+.item-top { display: flex; justify-content: space-between; align-items: center; }
+.name { font-size: 30rpx; font-weight: 600; }
+.role { font-size: 22rpx; color: #07c160; background: #e8f5e9; padding: 4rpx 12rpx; border-radius: 8rpx; }
+.item-sub { font-size: 24rpx; color: #999; margin-top: 8rpx; }
+.item-actions { margin-top: 12rpx; display: flex; gap: 24rpx; }
+.link { font-size: 26rpx; color: #07c160; }
+.link.red { color: #e33; }

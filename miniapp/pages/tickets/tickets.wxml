@@ -1,0 +1,23 @@
+<wxs module="fmt">
+  module.exports.statusText = function(s) {
+    var m = { open: "待处理", assigned: "已分配", processing: "处理中", resolved: "已解决", closed: "已关闭" }
+    return m[s] || s
+  }
+</wxs>
+<view class="page">
+  <view class="tabs">
+    <text class="tab {{status === '' ? 'active' : ''}}" bindtap="filterStatus" data-status="">全部</text>
+    <text class="tab {{status === 'open' ? 'active' : ''}}" bindtap="filterStatus" data-status="open">待处理</text>
+    <text class="tab {{status === 'processing' ? 'active' : ''}}" bindtap="filterStatus" data-status="processing">处理中</text>
+    <text class="tab {{status === 'resolved' ? 'active' : ''}}" bindtap="filterStatus" data-status="resolved">已解决</text>
+  </view>
+  <view wx:if="{{list.length === 0}}" class="empty">暂无工单</view>
+  <view class="card" wx:for="{{list}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+    <view style="display:flex;justify-content:space-between;align-items:center">
+      <text style="font-weight:bold;flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">{{item.title}}</text>
+      <text class="tag tag-{{item.workflow_state === 'open' ? 'pending' : item.workflow_state === 'resolved' ? 'approved' : 'policy'}}">{{fmt.statusText(item.workflow_state)}}</text>
+    </view>
+    <view class="meta">{{item.category}} · {{item.priority === 'urgent' ? '🔴 紧急' : ''}} {{item.created_at}}</view>
+  </view>
+  <view class="btn-primary" style="margin:24rpx" bindtap="goCreate">提交工单</view>
+</view>

@@ -1,0 +1,25 @@
+<wxs module="fmt">
+  module.exports.amount = function(v) { return (v / 100).toFixed(2) }
+  module.exports.statusText = function(s) {
+    var m = { submitted: "已提交", committee_review: "村委初审", secretary_review: "支书终审", approved: "已通过", rejected: "已驳回" }
+    return m[s] || s
+  }
+</wxs>
+<view class="page">
+  <view class="tabs">
+    <text class="tab {{status === '' ? 'active' : ''}}" bindtap="filterStatus" data-status="">全部</text>
+    <text class="tab {{status === 'submitted' ? 'active' : ''}}" bindtap="filterStatus" data-status="submitted">已提交</text>
+    <text class="tab {{status === 'approved' ? 'active' : ''}}" bindtap="filterStatus" data-status="approved">已通过</text>
+    <text class="tab {{status === 'rejected' ? 'active' : ''}}" bindtap="filterStatus" data-status="rejected">已驳回</text>
+  </view>
+  <view wx:if="{{list.length === 0}}" class="empty">暂无补贴申请</view>
+  <view class="card" wx:for="{{list}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+    <view style="display:flex;justify-content:space-between;align-items:center">
+      <text style="font-weight:bold">{{item.title}}</text>
+      <text class="tag tag-{{item.workflow_state}}">{{fmt.statusText(item.workflow_state)}}</text>
+    </view>
+    <view class="meta">金额: ¥{{fmt.amount(item.amount)}} · {{item.created_at}}</view>
+    <view wx:if="{{item.review_note}}" class="meta">审核意见: {{item.review_note}}</view>
+  </view>
+  <view class="btn-primary" style="margin:24rpx" bindtap="goApply">申请补贴</view>
+</view>

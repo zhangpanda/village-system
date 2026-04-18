@@ -1,0 +1,24 @@
+village.db
+village.db-shm
+village.db-wal
+data/
+uploads/
+server
+server-linux
+seed
+*.exe
+.DS_Store
+server.log
+
+# 软著申请材料（不需要版本控制）
+*.docx
+docs_copyright_code_front.txt
+docs_copyright_code_back.txt
+docs_copyright_manual.md
+
+# 微信开发者工具本地配置
+miniapp/project.private.config.json
+
+# 无关目录
+farmos/
+copyright/

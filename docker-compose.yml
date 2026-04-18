@@ -1,0 +1,16 @@
+services:
+  village:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - village-data:/app/data
+    environment:
+      - JWT_SECRET=${JWT_SECRET:?请设置 JWT_SECRET 环境变量}
+      - VILLAGE_NAME=${VILLAGE_NAME:-东兴堡村}
+      - CORS_ORIGIN=${CORS_ORIGIN:-}
+    command: ["./village-server", "-db", "/app/data/village.db"]
+    restart: unless-stopped
+
+volumes:
+  village-data:

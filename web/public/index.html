@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>村务公开</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="header">
+  <h1 id="siteTitle">🏘️ 村务公开平台</h1>
+  <div class="sub">阳光村务 · 透明财务 · 便民服务</div>
+  <div id="userBar" class="user-bar"></div>
+</div>
+<div class="tabs">
+  <div class="tab active" data-tab="notice">📢 公告</div>
+  <div class="tab" data-tab="finance">💰 财务</div>
+  <div class="tab" data-tab="subsidy">📋 补贴</div>
+  <div class="tab" data-tab="ticket">🔧 服务</div>
+  <div class="tab" data-tab="me">👤 我的</div>
+</div>
+<div id="app" class="content"></div>
+<div id="detail" class="detail-overlay">
+  <div class="detail-panel" id="detailContent"></div>
+</div>
+<div id="toast" class="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>

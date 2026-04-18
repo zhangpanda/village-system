@@ -1,0 +1,23 @@
+.page { padding: 24rpx; }
+.empty { text-align: center; color: #999; padding: 60rpx; }
+.item { background: #fff; border-radius: 12rpx; padding: 24rpx; margin-bottom: 16rpx; box-shadow: 0 2rpx 8rpx rgba(0,0,0,.04); }
+.item-top { display: flex; justify-content: space-between; align-items: center; }
+.item-title { font-size: 30rpx; font-weight: 600; flex: 1; }
+.item-sub { font-size: 24rpx; color: #999; margin-top: 8rpx; }
+.tag { font-size: 22rpx; color: #ff9800; background: #fff8e1; padding: 4rpx 12rpx; border-radius: 8rpx; }
+.mask { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.5); z-index: 99; display: flex; align-items: flex-end; }
+.popup { background: #fff; width: 100%; border-radius: 24rpx 24rpx 0 0; padding: 32rpx; max-height: 80vh; overflow-y: auto; }
+.popup-title { font-size: 34rpx; font-weight: bold; }
+.popup-tag { display: inline-block; font-size: 22rpx; color: #ff9800; background: #fff8e1; padding: 4rpx 12rpx; border-radius: 8rpx; margin: 12rpx 0; }
+.popup-sub { font-size: 26rpx; color: #666; margin-bottom: 24rpx; }
+.form-group { margin-bottom: 20rpx; }
+.form-label { font-size: 26rpx; color: #666; margin-bottom: 8rpx; display: block; }
+.form-textarea { width: 100%; height: 120rpx; border: 1rpx solid #ddd; border-radius: 8rpx; padding: 12rpx; font-size: 28rpx; box-sizing: border-box; }
+.btn-row { display: flex; gap: 16rpx; margin-bottom: 16rpx; }
+.btn { flex: 1; text-align: center; padding: 20rpx; border-radius: 12rpx; font-size: 28rpx; font-weight: 600; color: #fff; }
+.btn-green { background: #07c160; }
+.btn-red { background: #e33; }
+.btn-close { text-align: center; padding: 16rpx; color: #999; font-size: 28rpx; margin-top: 8rpx; }
+.comment-bar { display: flex; gap: 12rpx; margin-top: 16rpx; }
+.comment-input { flex: 1; border: 1rpx solid #ddd; border-radius: 8rpx; padding: 12rpx; font-size: 28rpx; }
+.comment-send { background: #07c160; color: #fff; padding: 12rpx 24rpx; border-radius: 8rpx; font-size: 28rpx; }

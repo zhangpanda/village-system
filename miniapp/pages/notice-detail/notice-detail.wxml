@@ -1,0 +1,8 @@
+<view class="page" wx:if="{{notice}}">
+  <view class="card">
+    <text class="title">{{notice.title}}</text>
+    <view class="meta">{{notice.author}} · {{notice.created_at}} · 阅读 {{notice.views}}</view>
+    <rich-text wx:if="{{notice.content}}" nodes="{{notice.content}}" class="content"></rich-text>
+  </view>
+  <button class="share-btn" open-type="share">分享到微信群</button>
+</view>

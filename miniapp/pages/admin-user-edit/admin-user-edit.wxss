@@ -1,0 +1,11 @@
+.page { padding: 24rpx; }
+.section { font-size: 28rpx; font-weight: 600; color: #333; margin: 24rpx 0 12rpx; padding-left: 8rpx; border-left: 6rpx solid #07c160; }
+.field { display: flex; align-items: center; background: #fff; padding: 20rpx 24rpx; margin-bottom: 2rpx; }
+.field .label { width: 160rpx; font-size: 28rpx; color: #666; flex-shrink: 0; }
+.field input { flex: 1; font-size: 28rpx; }
+.field picker { flex: 1; }
+.picker-val { font-size: 28rpx; color: #333; }
+.flags { display: flex; flex-wrap: wrap; gap: 12rpx; padding: 12rpx 0; }
+.flag { padding: 10rpx 24rpx; border-radius: 8rpx; font-size: 26rpx; background: #f5f5f5; color: #666; }
+.flag.active { background: #e8f5e9; color: #07c160; font-weight: 600; }
+.save-btn { margin-top: 32rpx; background: #07c160; color: #fff; border-radius: 12rpx; font-size: 32rpx; }
