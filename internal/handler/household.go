@@ -88,10 +88,17 @@ func (h *Handler) RemoveHouseholdMember(w http.ResponseWriter, r *http.Request) 
 }
 
 func (h *Handler) UpdateHouseholdMember(w http.ResponseWriter, r *http.Request) {
+	householdID, _ := strconv.ParseInt(r.PathValue("id"), 10, 64)
 	memberID, _ := strconv.ParseInt(r.PathValue("member_id"), 10, 64)
 	var req struct{ Relation string `json:"relation"` }
 	json.NewDecoder(r.Body).Decode(&req)
 	if req.Relation == "" { errJSON(w, 400, "关系不能为空"); return }
-	h.Household.UpdateMemberRelation(memberID, req.Relation)
+	m, err := h.Household.GetMember(memberID)
+	if err != nil || m.HouseholdID != householdID {
+		errJSON(w, 404, "成员不存在"); return
+	}
+	if err := h.Household.UpdateMemberRelation(memberID, req.Relation); err != nil {
+		errJSON(w, 500, "更新失败"); return
+	}
 	JSON(w, 200, map[string]string{"ok": "updated"})
 }

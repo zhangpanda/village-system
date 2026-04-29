@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/hex"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -31,6 +32,13 @@ var JWTSecret = func() []byte {
 	return []byte(hex.EncodeToString(b))
 }()
 
+// tokenClaims 与签发时的 JSON 字段一致；避免 MapClaims 类型断言导致 panic。
+type tokenClaims struct {
+	UID  int64  `json:"uid"`
+	Role string `json:"role"`
+	jwt.RegisteredClaims
+}
+
 func HashPassword(password string) string {
 	h, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	return string(h)
@@ -41,12 +49,14 @@ func CheckPassword(hash, password string) bool {
 }
 
 func GenerateToken(userID int64, role string) (string, error) {
-	claims := jwt.MapClaims{
-		"uid":  userID,
-		"role": role,
-		"exp":  time.Now().Add(24 * time.Hour).Unix(),
+	claims := tokenClaims{
+		UID:  userID,
+		Role: role,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
+		},
 	}
-	return jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString(JWTSecret)
+	return jwt.NewWithClaims(jwt.SigningMethodHS256, &claims).SignedString(JWTSecret)
 }
 
 func Auth(next http.Handler) http.Handler {
@@ -56,18 +66,23 @@ func Auth(next http.Handler) http.Handler {
 			http.Error(w, `{"error":"unauthorized"}`, http.StatusUnauthorized)
 			return
 		}
-		parsed, err := jwt.Parse(token, func(t *jwt.Token) (any, error) {
+		var tc tokenClaims
+		parsed, err := jwt.ParseWithClaims(token, &tc, func(t *jwt.Token) (any, error) {
+			if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
+				return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
+			}
 			return JWTSecret, nil
 		})
 		if err != nil || !parsed.Valid {
 			http.Error(w, `{"error":"invalid token"}`, http.StatusUnauthorized)
 			return
 		}
-		claims := parsed.Claims.(jwt.MapClaims)
-		uid := int64(claims["uid"].(float64))
-		role := claims["role"].(string)
-		ctx := context.WithValue(r.Context(), UserIDKey, uid)
-		ctx = context.WithValue(ctx, UserRoleKey, role)
+		if tc.UID <= 0 || tc.Role == "" {
+			http.Error(w, `{"error":"invalid token"}`, http.StatusUnauthorized)
+			return
+		}
+		ctx := context.WithValue(r.Context(), UserIDKey, tc.UID)
+		ctx = context.WithValue(ctx, UserRoleKey, tc.Role)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

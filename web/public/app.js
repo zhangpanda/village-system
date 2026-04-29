@@ -115,7 +115,7 @@ async function showNotice(id) {
     </div>
     <h2>${esc(n.title)}</h2>
     <div style="font-size:12px;color:#999;margin-bottom:16px">${esc(n.author)} · ${fmtDate(n.created_at)} · 阅读 ${n.views}</div>
-    <div style="font-size:14px;line-height:1.8">${n.content.includes('<')?n.content:n.content.replace(/\n/g,'<br>')}</div>
+    <div style="font-size:14px;line-height:1.8" class="notice-body-html">${n.content}</div>
   `);
 }
 

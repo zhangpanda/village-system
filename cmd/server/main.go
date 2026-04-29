@@ -206,19 +206,62 @@ func main() {
 	log.Println("服务已停止")
 }
 
+// cors 默认仅允许与请求 Host 同源的 Origin；生产请设置 CORS_ALLOWED_ORIGINS（逗号分隔，可含 * 仅用于开发）。
 func cors(next http.Handler) http.Handler {
-	allowedOrigin := os.Getenv("CORS_ORIGIN")
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		origin := allowedOrigin
-		if origin == "" {
-			origin = r.Header.Get("Origin")
-			if origin == "" { origin = "*" }
+	raw := os.Getenv("CORS_ALLOWED_ORIGINS")
+	if raw == "" {
+		raw = os.Getenv("CORS_ORIGIN")
+	}
+	var explicit []string
+	for _, o := range strings.Split(raw, ",") {
+		o = strings.TrimSpace(o)
+		if o != "" {
+			explicit = append(explicit, o)
 		}
-		w.Header().Set("Access-Control-Allow-Origin", origin)
+	}
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		reqOrigin := r.Header.Get("Origin")
+		allow := ""
+
+		if len(explicit) > 0 {
+			for _, o := range explicit {
+				if o == "*" {
+					allow = "*"
+					break
+				}
+				if o == reqOrigin {
+					allow = reqOrigin
+					break
+				}
+			}
+		} else {
+			scheme := "http"
+			if r.TLS != nil {
+				scheme = "https"
+			}
+			if xfp := r.Header.Get("X-Forwarded-Proto"); xfp == "https" || xfp == "http" {
+				scheme = xfp
+			}
+			same := scheme + "://" + r.Host
+			if reqOrigin == same || reqOrigin == "" {
+				if reqOrigin != "" {
+					allow = reqOrigin
+				}
+			}
+		}
+
+		if allow != "" {
+			w.Header().Set("Access-Control-Allow-Origin", allow)
+			w.Header().Set("Vary", "Origin")
+		}
 		w.Header().Set("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type,Authorization")
 		if r.Method == "OPTIONS" {
-			w.WriteHeader(204)
+			if reqOrigin != "" && allow == "" {
+				w.WriteHeader(http.StatusForbidden)
+				return
+			}
+			w.WriteHeader(http.StatusNoContent)
 			return
 		}
 		next.ServeHTTP(w, r)

@@ -169,10 +169,10 @@ async function showNoticeDetail(id) {
       <span class="status-tag ${n.workflow_state}">${stateMap[n.workflow_state]}</span>
       <span style="font-size:12px;color:#999;margin-left:8px">${catMap[n.category]||n.category}</span>
     </div>
-    <div style="font-size:12px;color:#999;margin-bottom:12px">${n.author} · ${n.created_at} · 阅读 ${n.views}</div>
-    <div style="font-size:14px;line-height:1.8;margin-bottom:16px;padding:12px;background:#fafafa;border-radius:8px">${n.content.includes('<')?n.content:n.content.replace(/\n/g,'<br>')}</div>
-    ${n.reviewer_name?'<div style="font-size:12px;color:var(--blue);margin-bottom:8px">审核人：'+n.reviewer_name+(n.review_note?' — '+n.review_note:'')+'</div>':''}
-    ${logs?.length?'<div style="font-size:12px;color:#999;margin-bottom:12px"><b>操作日志：</b>'+logs.map(l=>'<div>'+l.operator_name+' '+l.action+(l.note?' ('+l.note+')':'')+'</div>').join('')+'</div>':''}
+    <div style="font-size:12px;color:#999;margin-bottom:12px">${esc(n.author)} · ${n.created_at} · 阅读 ${n.views}</div>
+    <div style="font-size:14px;line-height:1.8;margin-bottom:16px;padding:12px;background:#fafafa;border-radius:8px" class="notice-body-html">${n.content}</div>
+    ${n.reviewer_name?'<div style="font-size:12px;color:var(--blue);margin-bottom:8px">审核人：'+esc(n.reviewer_name)+(n.review_note?' — '+esc(n.review_note):'')+'</div>':''}
+    ${logs?.length?'<div style="font-size:12px;color:#999;margin-bottom:12px"><b>操作日志：</b>'+logs.map(l=>'<div>'+esc(l.operator_name)+' '+esc(l.action)+(l.note?' ('+esc(l.note)+')':'')+'</div>').join('')+'</div>':''}
     ${n.workflow_state==='pending_review'&&canRole('deputy')?`
       <div class="form-group"><label>审核意见</label><textarea id="noticeReviewNote" placeholder="审核意见..."></textarea></div>
       <div class="action-btns">
@@ -331,11 +331,11 @@ async function showSubsidyDetail(id) {
       <div>申请金额：<b style="color:var(--green)">¥${fmt(s.amount)}</b></div>
       <div>申请时间：${s.created_at}</div>
     </div>
-    <div style="font-size:14px;line-height:1.7;margin-bottom:12px"><b>申请理由：</b>${s.reason||'无'}</div>
+    <div style="font-size:14px;line-height:1.7;margin-bottom:12px;white-space:pre-wrap"><b>申请理由：</b>${esc(s.reason)||'无'}</div>
     ${imgs.length?'<div style="margin-bottom:12px"><b>附件：</b><br>'+imgs.map(u=>'<img src="'+u+'" style="width:80px;height:80px;object-fit:cover;border-radius:6px;margin:2px;cursor:pointer" onclick="window.open(this.src)">').join('')+'</div>':''}
-    ${s.committee_name?'<div style="font-size:13px;padding:8px;background:#f5f5f5;border-radius:6px;margin-bottom:8px"><b>村委初审：</b>'+s.committee_name+' — '+(s.committee_note||'无意见')+'</div>':''}
-    ${s.secretary_name?'<div style="font-size:13px;padding:8px;background:#f0fff0;border-radius:6px;margin-bottom:8px"><b>村支书终审：</b>'+s.secretary_name+' — '+(s.secretary_note||'无意见')+'</div>':''}
-    ${logs?.length?'<div style="font-size:12px;color:#999;margin-bottom:12px"><b>审批日志：</b>'+logs.map(l=>'<div>'+l.operator_name+' '+l.action+(l.note?' ('+l.note+')':'')+'</div>').join('')+'</div>':''}
+    ${s.committee_name?'<div style="font-size:13px;padding:8px;background:#f5f5f5;border-radius:6px;margin-bottom:8px"><b>村委初审：</b>'+esc(s.committee_name)+' — '+esc(s.committee_note||'无意见')+'</div>':''}
+    ${s.secretary_name?'<div style="font-size:13px;padding:8px;background:#f0fff0;border-radius:6px;margin-bottom:8px"><b>村支书终审：</b>'+esc(s.secretary_name)+' — '+esc(s.secretary_note||'无意见')+'</div>':''}
+    ${logs?.length?'<div style="font-size:12px;color:#999;margin-bottom:12px"><b>审批日志：</b>'+logs.map(l=>'<div>'+esc(l.operator_name)+' '+esc(l.action)+(l.note?' ('+esc(l.note)+')':'')+'</div>').join('')+'</div>':''}
     ${s.workflow_state==='submitted'&&canRole('committee')?`
       <div class="form-group"><label>初审意见</label><textarea id="reviewNote" placeholder="审批意见..."></textarea></div>
       <div class="action-btns">
@@ -392,11 +392,11 @@ async function showTicketAdmin(id) {
   showModal(`
     <span class="close" onclick="closeModal()">&times;</span>
     <h3>${esc(t.title)} <span class="status-tag ${t.workflow_state}">${stateMap[t.workflow_state]}</span></h3>
-    <div style="font-size:13px;color:#666;margin-bottom:12px">${t.submitter} · ${ticketCatMap[t.category]||t.category} · ${priorityMap[t.priority]||t.priority}${t.assignee?' · 处理人：'+t.assignee:''}</div>
-    <div style="font-size:14px;line-height:1.7;white-space:pre-line;margin-bottom:12px">${t.content}</div>
+    <div style="font-size:13px;color:#666;margin-bottom:12px">${esc(t.submitter)} · ${ticketCatMap[t.category]||t.category} · ${priorityMap[t.priority]||t.priority}${t.assignee?' · 处理人：'+esc(t.assignee):''}</div>
+    <div style="font-size:14px;line-height:1.7;white-space:pre-wrap;margin-bottom:12px">${esc(t.content)}</div>
     ${imgs.length?'<div style="margin-bottom:12px">'+imgs.map(u=>'<img src="'+u+'" style="width:80px;height:80px;object-fit:cover;border-radius:6px;margin:2px;cursor:pointer" onclick="window.open(this.src)">').join('')+'</div>':''}
-    ${logs?.length?'<div style="font-weight:600;margin:8px 0">操作日志</div>'+logs.map(l=>'<div style="font-size:12px;color:#666;padding:4px 0">'+l.operator_name+' '+l.action+' → '+stateMap[l.to_state]+(l.note?' ('+l.note+')':'')+'</div>').join(''):''}
-    ${comments?.length?'<div style="font-weight:600;margin:8px 0">回复记录</div>'+comments.map(c=>'<div style="padding:6px 0;border-bottom:1px solid #f0f0f0"><b style="font-size:13px">'+c.user_name+'</b><div style="font-size:13px">'+c.content+'</div></div>').join(''):''}
+    ${logs?.length?'<div style="font-weight:600;margin:8px 0">操作日志</div>'+logs.map(l=>'<div style="font-size:12px;color:#666;padding:4px 0">'+esc(l.operator_name)+' '+esc(l.action)+' → '+esc(stateMap[l.to_state] ?? l.to_state ?? '')+(l.note?' ('+esc(l.note)+')':'')+'</div>').join(''):''}
+    ${comments?.length?'<div style="font-weight:600;margin:8px 0">回复记录</div>'+comments.map(c=>'<div style="padding:6px 0;border-bottom:1px solid #f0f0f0"><b style="font-size:13px">'+esc(c.user_name)+'</b><div style="font-size:13px;white-space:pre-wrap">'+esc(c.content)+'</div></div>').join(''):''}
     ${!['resolved','closed'].includes(t.workflow_state)?`<div style="margin-top:16px">
       <div class="form-group"><textarea id="ticketReply" placeholder="回复内容..."></textarea></div>
       <div class="action-btns">
@@ -835,7 +835,7 @@ function editMemberRelation(hhId, memberId, current) {
 }
 function saveRelation(hhId, memberId) {
   const rel = document.getElementById('editRel').value;
-  fetch(API+'/admin/households/0/members/'+memberId,{method:'PUT',headers:headers(),body:JSON.stringify({relation:rel})}).then(()=>{
+  fetch(API+'/admin/households/'+hhId+'/members/'+memberId,{method:'PUT',headers:headers(),body:JSON.stringify({relation:rel})}).then(()=>{
     closeModal(); toast('已修改'); showHouseholdDetail(hhId);
   });
 }

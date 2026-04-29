@@ -77,6 +77,20 @@ func (s *HouseholdStore) Get(id int64) (*model.Household, error) {
 	return h, err
 }
 
+// GetMember 按 household_members 主键查询成员（含 household_id，用于校验路径与归属）。
+func (s *HouseholdStore) GetMember(memberID int64) (*model.HouseholdMember, error) {
+	var m model.HouseholdMember
+	err := s.DB.QueryRow(
+		`SELECT m.id, m.household_id, m.user_id, u.name, m.relation
+		FROM household_members m JOIN users u ON m.user_id=u.id WHERE m.id=?`,
+		memberID,
+	).Scan(&m.ID, &m.HouseholdID, &m.UserID, &m.UserName, &m.Relation)
+	if err != nil {
+		return nil, err
+	}
+	return &m, nil
+}
+
 func (s *HouseholdStore) ListMembers(householdID int64) ([]model.HouseholdMember, error) {
 	rows, err := s.DB.Query(
 		`SELECT m.id, m.household_id, m.user_id, u.name, m.relation
@@ -113,8 +127,9 @@ func (s *HouseholdStore) RemoveMember(id int64) error {
 	return nil
 }
 
-func (s *HouseholdStore) UpdateMemberRelation(id int64, relation string) {
-	s.DB.Exec(`UPDATE household_members SET relation=? WHERE id=?`, relation, id)
+func (s *HouseholdStore) UpdateMemberRelation(id int64, relation string) error {
+	_, err := s.DB.Exec(`UPDATE household_members SET relation=? WHERE id=?`, relation, id)
+	return err
 }
 
 func (s *HouseholdStore) Count() int {

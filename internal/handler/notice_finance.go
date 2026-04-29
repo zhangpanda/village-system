@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"village-system/internal/model"
+	"village-system/internal/sanitize"
 )
 
 // ==================== 公告 ====================
@@ -15,6 +16,7 @@ func (h *Handler) ListNotices(w http.ResponseWriter, r *http.Request) {
 	cat := r.URL.Query().Get("category")
 	keyword := r.URL.Query().Get("q")
 	list, total, _ := h.Notice.List(page, size, cat, keyword, false)
+	sanitizeNoticeList(list)
 	JSON(w, 200, map[string]any{"data": list, "total": total, "page": page})
 }
 
@@ -22,6 +24,7 @@ func (h *Handler) GetNotice(w http.ResponseWriter, r *http.Request) {
 	id, _ := strconv.ParseInt(r.PathValue("id"), 10, 64)
 	n, err := h.Notice.Get(id)
 	if err != nil { errJSON(w, 404, "公告不存在"); return }
+	sanitizeNotice(n)
 	logs := h.Workflow.GetLogs("notice", id)
 	JSON(w, 200, map[string]any{"notice": n, "logs": logs})
 }
@@ -32,6 +35,7 @@ func (h *Handler) AdminListNotices(w http.ResponseWriter, r *http.Request) {
 	cat := r.URL.Query().Get("category")
 	state := r.URL.Query().Get("state")
 	list, total, _ := h.Notice.ListAdmin(page, size, cat, state)
+	sanitizeNoticeList(list)
 	JSON(w, 200, map[string]any{"data": list, "total": total, "page": page})
 }
 
@@ -44,6 +48,7 @@ func (h *Handler) CreateNotice(w http.ResponseWriter, r *http.Request) {
 	if n.Title == "" || n.Content == "" {
 		errJSON(w, 400, "标题和内容不能为空"); return
 	}
+	n.Content = sanitize.NoticeContent(n.Content)
 	n.AuthorID = getUID(r)
 	if n.Attachments == "" { n.Attachments = "[]" }
 
@@ -85,7 +90,7 @@ func (h *Handler) UpdateNotice(w http.ResponseWriter, r *http.Request) {
 	var n model.Notice
 	n.ID = id
 	if req.Title != nil { n.Title = *req.Title }
-	if req.Content != nil { n.Content = *req.Content }
+	if req.Content != nil { n.Content = sanitize.NoticeContent(*req.Content) }
 	if req.Category != nil { n.Category = *req.Category }
 	if req.Pinned != nil { n.Pinned = *req.Pinned }
 	att := "[]"
@@ -102,6 +107,19 @@ func (h *Handler) DeleteNotice(w http.ResponseWriter, r *http.Request) {
 	id, _ := strconv.ParseInt(r.PathValue("id"), 10, 64)
 	h.Notice.Delete(id)
 	JSON(w, 200, map[string]string{"ok": "deleted"})
+}
+
+func sanitizeNotice(n *model.Notice) {
+	if n == nil {
+		return
+	}
+	n.Content = sanitize.NoticeContent(n.Content)
+}
+
+func sanitizeNoticeList(list []model.Notice) {
+	for i := range list {
+		list[i].Content = sanitize.NoticeContent(list[i].Content)
+	}
 }
 
 // 审核公告（副书记/副主任以上）
